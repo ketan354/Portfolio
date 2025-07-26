@@ -1,3 +1,7 @@
+// Initialize EmailJS - Replace with your actual keys from EmailJS dashboard
+// Get your Public Key from: https://dashboard.emailjs.com/admin/account
+emailjs.init("oTpH7nhHZtT65ul9O"); // Example: "user_abc123def456"
+
 // Wait for DOM to be fully loaded
 document.addEventListener('DOMContentLoaded', function() {
     
@@ -179,11 +183,10 @@ document.addEventListener('DOMContentLoaded', function() {
             e.preventDefault();
             
             // Get form data
-            const formData = new FormData(this);
-            const name = this.querySelector('input[type="text"]').value;
-            const email = this.querySelector('input[type="email"]').value;
-            const subject = this.querySelector('input[placeholder="Subject"]').value;
-            const message = this.querySelector('textarea').value;
+            const name = this.querySelector('#name').value;
+            const email = this.querySelector('#email').value;
+            const subject = this.querySelector('#subject').value;
+            const message = this.querySelector('#message').value;
             
             // Basic validation
             if (!name || !email || !subject || !message) {
@@ -196,13 +199,43 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
             
-            // Simulate form submission
-            showNotification('Sending message...', 'info');
+            // Show loading state
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Sending...';
+            submitBtn.disabled = true;
             
-            setTimeout(() => {
+            // Prepare data for sending
+            const formData = {
+                name: name,
+                email: email,
+                subject: subject,
+                message: message
+            };
+            
+            // Send email via EmailJS - Replace with your actual Service ID and Template ID
+            // Get Service ID from: https://dashboard.emailjs.com/admin
+            // Get Template ID from: https://dashboard.emailjs.com/admin
+            emailjs.send("service_veoxeib","template_iz563to", {
+                from_name: name,
+                from_email: email,
+                subject: subject,
+                message: message,
+                to_name: "Ketan Prajapati",
+                to_email: "ketan.prajapati1901@gmail.com"
+            })
+            .then(function(response) {
                 showNotification('Message sent successfully! I\'ll get back to you soon.', 'success');
                 this.reset();
-            }, 2000);
+            }, function(error) {
+                console.error('Error:', error);
+                showNotification('Failed to send message. Please try again later.', 'error');
+            })
+            .finally(() => {
+                // Reset button state
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            });
         });
     }
     
