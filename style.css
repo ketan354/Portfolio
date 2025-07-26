@@ -376,7 +376,7 @@ html {
 }
 
 .btn-outline-light:hover {
-    background: var(--text-secondary);
+    /* background: var(--text-secondary); */
     color: var(--dark-bg);
     transform: translateY(-3px);
 }
